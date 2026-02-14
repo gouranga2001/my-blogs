@@ -12,9 +12,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class BlogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         //get all published blog
@@ -24,7 +22,8 @@ class BlogController extends Controller
             ->with('user')
             ->paginate(10);
 
-        return view('blog.index', compact('blogs'));
+        // return view('blog.index', compact('blogs'));
+        return response()->json($blogs);
     }
 
     /**
@@ -83,7 +82,9 @@ class BlogController extends Controller
             abort(404);
         }
 
-        return view('blog.show', compact('blog'));
+        return view('show', compact('blog'));
+        // return response()->json($blog);
+
     }
 
     /**
@@ -143,12 +144,14 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         //delete a blog
-        $this->authorize('delete', $blog);
+        // $this->authorize('delete', $blog);
 
-        $blog->delete();
+        $blog->update([
+            'published_at' => null
+        ]);
 
         return redirect()->route('blog.index')
-            ->with('success', 'Blog deleted successfully.');
+            ->with('success', 'Blog unpublished successfully.');
     }
 
 }
