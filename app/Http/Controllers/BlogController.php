@@ -22,8 +22,8 @@ class BlogController extends Controller
             ->with('user')
             ->paginate(10);
 
-        // return view('blog.index', compact('blogs'));
-        return response()->json($blogs);
+        return view('index', compact('blogs'));
+        // return response()->json($blogs);
     }
 
     /**
@@ -31,8 +31,9 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        return view('create');
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -58,8 +59,8 @@ class BlogController extends Controller
         $htmlContent = \Illuminate\Support\Str::markdown($request->markdown_content);
 
         $blog = Blog::create([
-            // 'user_id' => Auth::id(),
-            'user_id' => 1,
+            'user_id' => Auth::id(),
+            // 'user_id' => 1,
             'title' => $request->title,
             'slug' => $slug,
             'markdown_content' => $request->markdown_content,
@@ -81,6 +82,7 @@ class BlogController extends Controller
         if (!$blog->published_at || $blog->published_at > now()) {
             abort(404);
         }
+        $blog->load('user', 'comments');
 
         return view('show', compact('blog'));
         // return response()->json($blog);
@@ -92,7 +94,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        //show edit form
+        return view('edit' ,compact('blog'));
         
     }
 
@@ -101,23 +103,37 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
-        //update blog
-        $this->authorize('update', $blog);
+
+
+        if ($request->action === 'publish') {
+            $blog->published_at = now();
+            $blog->save();
+
+            return back()->with('success', 'Blog published successfully.');
+        }
+
+        if ($request->action === 'unpublish') {
+            $blog->published_at = null;
+            $blog->save();
+
+            return back()->with('success', 'Blog unpublished successfully.');
+        }
 
         $request->validate([
             'title' => 'required|max:50',
             'markdown_content' => 'required',
         ]);
 
-        // Regenerate slug if title changed
         if ($blog->title !== $request->title) {
             $slug = Str::slug($request->title);
             $originalSlug = $slug;
             $count = 1;
 
-            while (Blog::where('slug', $slug)
+            while (
+                Blog::where('slug', $slug)
                     ->where('id', '!=', $blog->id)
-                    ->exists()) {
+                    ->exists()
+            ) {
                 $slug = $originalSlug . '-' . $count++;
             }
 
@@ -126,17 +142,16 @@ class BlogController extends Controller
 
         $blog->title = $request->title;
         $blog->markdown_content = $request->markdown_content;
-        $blog->html_content = \Illuminate\Support\Str::markdown($request->markdown_content);
-
-        if ($request->has('publish') && !$blog->published_at) {
-            $blog->published_at = now();
-        }
+        $blog->html_content = Str::markdown($request->markdown_content);
 
         $blog->save();
 
-        return redirect()->route('blog.show', $blog->slug)
+        return redirect()
+            ->route('blog.show', $blog->slug)
             ->with('success', 'Blog updated successfully.');
-    }   
+    }
+
+   
 
     /**
      * Remove the specified resource from storage.
@@ -150,8 +165,18 @@ class BlogController extends Controller
             'published_at' => null
         ]);
 
-        return redirect()->route('blog.index')
+        return redirect()->route('admin.dashboard')
             ->with('success', 'Blog unpublished successfully.');
     }
+
+    public function admin()
+    {    $blogs = Blog::where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return view('dashboard', compact('blogs'));
+
+    }
+
 
 }

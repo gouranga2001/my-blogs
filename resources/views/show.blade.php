@@ -7,17 +7,22 @@
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+
+<script>hljs.highlightAll();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('markdown code ').forEach(el => {
+    document.querySelectorAll('.markdown pre code').forEach(el => {
         hljs.highlightElement(el);
     });
 });
+
 </script>
 
 <style>
@@ -26,13 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 html, body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background-color: #f8fafc; /* soft neutral white */
+    background-color: #ffffff; /* soft neutral white */
     color: #1e293b; /* slate-800 */
 }
 
 .blog-container {
     max-width: 760px;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
 }
+
 
 /* ===== Title & Meta ===== */
 
@@ -45,25 +54,26 @@ h1.display-5 {
 }
 
 /* ===== Markdown Typography ===== */
+/* ===== Responsive Typography ===== */
 
-.markdown h1,
-.markdown h2,
-.markdown h3 {
-    margin-top: 2.2rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    color: #0f172a;
+h1.display-5 {
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+}
+
+.markdown h1 {
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
 }
 
 .markdown h2 {
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 0.4rem;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+}
+
+.markdown h3 {
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
 }
 
 .markdown p {
-    margin-bottom: 1.1rem;
-    line-height: 1.75;
-    color: #334155; /* slate-700 */
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
 }
 
 .markdown ul,
@@ -91,24 +101,30 @@ h1.display-5 {
 /* ===== Code Styling ===== */
 
 /* Inline code */
-.markdown code {
-    background: #eef2ff; /* soft indigo tint */
-    color: #4338ca;
-    padding: 0.2rem 0.4rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
+.markdown code { 
+    background: #eef2ff; /* soft indigo tint */ 
+    color: #4338ca; 
+    padding: 0.2rem 0.4rem; 
+    border-radius: 6px; 
+    font-size: 0.9rem; 
 }
+
 
 /* Code block */
 .markdown pre {
-    background: #0f172a; /* deep slate */
-    color: #e2e8f0;
+    background: #F9F9F9;
+    color: #0f172a;
     padding: 1.2rem;
     border-radius: 12px;
     overflow-x: auto;
     margin: 1.5rem 0;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.9rem;
 }
+
+
 
 /* Ensure highlight.js inherits properly */
 .markdown pre code {
@@ -123,7 +139,7 @@ h1.display-5 {
     border-left: 4px solid #3b82f6;
     padding-left: 1rem;
     color: #475569;
-    background: #f1f5f9;
+    background: #ffffff;
     padding: 0.8rem 1rem;
     border-radius: 6px;
     margin: 1.5rem 0;
@@ -132,10 +148,11 @@ h1.display-5 {
 /* ===== Tables (optional improvement) ===== */
 
 .markdown table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }
+
 
 .markdown th,
 .markdown td {
@@ -146,6 +163,33 @@ h1.display-5 {
 .markdown th {
     background: #f1f5f9;
     font-weight: 600;
+}
+
+
+.markdown img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+
+@media (max-width: 576px) {
+
+    .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .markdown pre {
+        padding: 0.8rem;
+        border-radius: 10px;
+    }
+
+    .markdown ul,
+    .markdown ol {
+        padding-left: 1.2rem;
+    }
+
 }
 
 </style>
@@ -162,13 +206,71 @@ h1.display-5 {
     </h1>
 
     <div class="text-muted mb-4 border-bottom pb-3">
-        By {{ $blog->user->username }}
-        • {{ $blog->published_at }}
+        By <a href="{{ route('user.show', $blog->user) }}"
+                class="text-decoration-none text-primary fw-medium">
+                {{ $blog->user->username }}
+            </a>
+        •  {{ $blog->published_at->format('M d, Y') }}
     </div>
 
     <article class="markdown">
         {!! $blog->html_content !!}
     </article>
+
+    <hr class="my-5">
+
+<!-- COMMENTS SECTION -->
+<div class="mt-4">
+
+    <h4 class="mb-4">Comments</h4>
+
+    <!-- Comment Form -->
+    <div class="card p-3 mb-4">
+
+        <form method="POST" action="{{ route('comments.store', $blog) }}">
+            @csrf
+
+            <div class="mb-3">
+                <label class="form-label">Your Name</label>
+                <input name="author_name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email (optional)</label>
+                <input name="author_email" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Comment</label>
+                <textarea name="text" class="form-control" required></textarea>
+            </div>
+
+            <button class="btn btn-primary">Post Comment</button>
+        </form>
+
+    </div>
+
+    <!-- Comments List -->
+    @forelse($blog->comments as $comment)
+        <div class="border rounded p-3 mb-3">
+
+            <div class="fw-semibold">
+                {{ $comment->author_name }}
+            </div>
+
+            <div class="text-muted small mb-2">
+                {{ $comment->created_at->format('M d, Y') }}
+            </div>
+
+            <p class="mb-0">{{ $comment->text }}</p>
+
+        </div>
+    @empty
+        <p class="text-muted">No comments yet.</p>
+    @endforelse
+
+</div>
+
 
 </div>
 

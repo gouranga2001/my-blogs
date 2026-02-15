@@ -25,10 +25,11 @@ class commentcontroller extends Controller
             'text' => 'required',
         ]);
 
-        $comment = $blog->comments()->create($request->all());
+        $blog->comments()->create($request->all());
 
-        return response()->json($comment, 201);
+        return back()->with('success', 'Comment added!');
     }
+
 
     // Update comment
     public function update(Request $request, Comment $comment)

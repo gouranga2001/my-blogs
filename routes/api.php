@@ -10,7 +10,7 @@ use App\Models\User;
 
 use function Symfony\Component\Clock\now;
 
-Route::apiResource('blog', BlogController::class);
+// Route::apiResource('blog', BlogController::class);
 
 
 // Route::get('users/{user}/blogs', function ($userId) {
@@ -26,10 +26,10 @@ Route::get('users/{user}/blogs', function (User $user) {
 });
 
 
-Route::get('blog/{blog}/comments', [CommentController::class, 'index']);
-Route::post('blog/{blog}/comments', [CommentController::class, 'store']);
-Route::put('comments/{comment}', [CommentController::class, 'update']);
-Route::delete('comments/{comment}', [CommentController::class, 'destroy']);
+// Route::get('blog/{blog}/comments', [CommentController::class, 'index']);
+// Route::post('blog/{blog}/comments', [CommentController::class, 'store']);
+// Route::put('comments/{comment}', [CommentController::class, 'update']);
+// Route::delete('comments/{comment}', [CommentController::class, 'destroy']);
 
 
 Route::post('users', [UserController::class, 'store']);
