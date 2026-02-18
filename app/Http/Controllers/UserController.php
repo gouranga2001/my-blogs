@@ -52,6 +52,45 @@ class UserController extends Controller
                 ->with('success', 'Account created!');
         }
 
+
+    public function update(Request $request,User $user){
+
+        $request->validate([
+            'name' => 'required',
+            'username' => 'required|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6',
+            'bio' => 'nullable',
+            'github' => 'nullable|url',
+            'linkedin' => 'nullable|url',
+            'avatar' => 'nullable|image|max:2048'
+        ]);
+
+        $data = $request->only([
+            'name',
+            'username',
+            'email',
+            'bio',
+            'github',
+            'linkedin',
+            
+        ]);
+
+        if($request->password){
+            $data['password'] = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('avatar')){
+            $path = $request->file('avatar')->store('avatars','public');
+            $data['avatar_path'] = $path;
+
+        }
+
+        $user->update($data);
+
+        return back()->with('success','profile updated successfully');
+    }
+
     public function login(Request $request)
         {
             $credentials = $request->validate([

@@ -96,7 +96,7 @@ body {
             </h4>
 
             <p class="text-muted mb-3">
-                @{{ $user->username }}
+               {{ $user->username }}
             </p>
 
             @if($user->bio)

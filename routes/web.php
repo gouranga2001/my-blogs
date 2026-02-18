@@ -38,7 +38,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin', [BlogController::class, 'admin'])
         ->name('admin.dashboard');
 
-    // Create blog form
+    //profile update(admin area)
+    Route::patch('/admin/profile/{user}', [UserController::class, 'update'])
+        ->name('admin.profile.update');
+        
+        // Create blog form
     Route::get('/admin/blog/create', [BlogController::class, 'create'])
         ->name('blog.create');
 
@@ -56,9 +60,6 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/admin/blog/{blog}/edit', [BlogController::class, 'edit'])
     ->name('blog.edit');
-
-    Route::patch('/admin/blog/{blog}', [BlogController::class, 'update'])
-    ->name('blog.update');
 
 });
 
