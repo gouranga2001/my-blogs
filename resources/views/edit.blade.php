@@ -23,56 +23,75 @@
 
 <body>
 
-<div class="container py-4" style="max-width:800px">
+    <div class="container py-4" style="max-width:800px">
 
-    <h2 class="text-primary mb-4">Edit Blog</h2>
+        <h2 class="text-primary mb-4">Edit Blog</h2>
 
-    <!-- IMPORTANT: update route -->
-    <form method="POST" action="{{ route('blog.update', $blog) }}">
-        @csrf
-        @method('PATCH')
+        <!-- IMPORTANT: update route -->
+        <form method="POST" action="{{ route('blog.update', $blog) }}" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
 
-        <div class="mb-3">
-            <label class="form-label">Title</label>
+            <div class="mb-3">
+                <label class="form-label">Title</label>
 
-            <!-- pre-filled -->
-            <input
-                name="title"
-                class="form-control"
-                required
-                maxlength="50"
-                value="{{ old('title', $blog->title) }}"
-            >
-        </div>
+                <!-- pre-filled -->
+                <input name="title" class="form-control" required maxlength="50"
+                    value="{{ old('title', $blog->title) }}">
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Markdown Content</label>
+            <div class="mb-3">
+                <label class="form-label">Markdown Content</label>
 
-            <!-- pre-filled -->
-            <textarea
-                name="markdown_content"
-                class="form-control editor"
-                required
-            >{{ old('markdown_content', $blog->markdown_content) }}</textarea>
-        </div>
+                <!-- pre-filled -->
+                <textarea name="markdown_content" class="form-control editor" required>{{ old('markdown_content', $blog->markdown_content) }}</textarea>
+            </div>
 
-        <div class="d-flex gap-2">
+            <div class="mb-3">
+                <label class="form-label">Thumbnail Image</label>
 
-            @if(!$blog->published_at)
-            <button class="btn btn-primary" name="action" value="publish">
-                Publish
-            </button>
-            @endif
+                @if ($blog->thumbnail_image)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $blog->thumbnail_image) }}" class="img-fluid rounded"
+                            style="max-height:150px; object-fit:cover;">
+                    </div>
+                @endif
 
-            <button class="btn btn-outline-secondary">
-                Update
-            </button>
+                <input type="file" name="thumbnail_image" class="form-control">
+                <div class="form-text">Leave empty to keep existing image</div>
+            </div>
 
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Upload Content Images</label>
 
-    </form>
+                <input type="file" name="featured_image[]" class="form-control" multiple>
 
-</div>
+                <div class="form-text">
+                    Upload one or more images to use inside markdown.
+                    Leave empty to keep existing content.
+                </div>
+            </div>
+
+
+
+            <div class="d-flex gap-2">
+
+                @if (!$blog->published_at)
+                    <button class="btn btn-primary" name="action" value="publish">
+                        Publish
+                    </button>
+                @endif
+
+                <button class="btn btn-outline-secondary">
+                    Update
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </body>
+
 </html>

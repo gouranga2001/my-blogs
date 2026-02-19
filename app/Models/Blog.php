@@ -15,6 +15,8 @@ class Blog extends Model
         'markdown_content',
         'html_content',
         'published_at',
+        'featured_image',
+        'thumbnail_image'
     ];
 
     protected $casts = [

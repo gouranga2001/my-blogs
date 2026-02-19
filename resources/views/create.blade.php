@@ -27,7 +27,7 @@
 
         <h2 class="text-primary mb-4">Create Blog</h2>
 
-        <form method="POST" action="{{ route('blog.store') }}">
+        <form method="POST" action="{{ route('blog.store') }}" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
@@ -39,6 +39,19 @@
                 <label class="form-label">Markdown Content</label>
                 <textarea name="markdown_content" class="form-control editor" required></textarea>
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Thumbnail Image</label>
+                <input type="file" name="thumbnail_image" class="form-control">
+                <div class="form-text">Recommended size: 1200×400</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Featured Images</label>
+                <input type="file" name="featured_image[]" class="form-control" multiple>
+                <div class="form-text">You can upload multiple images for markdown content.</div>
+            </div>
+
 
             <div class="d-flex gap-2">
 
