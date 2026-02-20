@@ -107,18 +107,22 @@ class BlogController extends Controller
 
     public function update(Request $request, Blog $blog)
     {
+        // ===== Publish / Unpublish =====
         if ($request->action === 'publish') {
             $blog->published_at = now();
             $blog->save();
+
             return back()->with('success', 'Blog published successfully.');
         }
 
         if ($request->action === 'unpublish') {
             $blog->published_at = null;
             $blog->save();
+
             return back()->with('success', 'Blog unpublished successfully.');
         }
 
+        // ===== Validation =====
         $request->validate([
             'title' => 'required|max:50',
             'markdown_content' => 'required',
@@ -126,6 +130,7 @@ class BlogController extends Controller
             'thumbnail_image' => 'nullable|image|max:2048',
         ]);
 
+        // ===== Slug Update =====
         if ($blog->title !== $request->title) {
             $slug = Str::slug($request->title);
             $originalSlug = $slug;
@@ -144,8 +149,12 @@ class BlogController extends Controller
 
         $blog->title = $request->title;
 
+        $markdown = $request->markdown_content;
+
+        // ===== Handle Featured Images (MULTIPLE) =====
         if ($request->hasFile('featured_image')) {
 
+            // Delete old images
             if ($blog->featured_image) {
                 $oldImages = json_decode($blog->featured_image, true);
 
@@ -159,12 +168,23 @@ class BlogController extends Controller
             $featuredPaths = [];
 
             foreach ($request->file('featured_image') as $file) {
-                $featuredPaths[] = $file->store('blogs/featured', 'public');
+
+                $path = $file->store('blogs/featured', 'public');
+                $featuredPaths[] = $path;
+
+                $originalName = $file->getClientOriginalName();
+
+                $markdown = str_replace(
+                    $originalName,
+                    "/storage/$path",
+                    $markdown
+                );
             }
 
             $blog->featured_image = json_encode($featuredPaths);
         }
 
+        // ===== Handle Thumbnail =====
         if ($request->hasFile('thumbnail_image')) {
 
             if ($blog->thumbnail_image) {
@@ -175,8 +195,9 @@ class BlogController extends Controller
                 ->store('blogs/thumbnails', 'public');
         }
 
-        $blog->markdown_content = $request->markdown_content;
-        $blog->html_content = Str::markdown($request->markdown_content);
+        // ===== Update Content =====
+        $blog->markdown_content = $markdown;
+        $blog->html_content = Str::markdown($markdown);
 
         $blog->save();
 
