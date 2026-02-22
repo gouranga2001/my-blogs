@@ -15,10 +15,10 @@ Route::get('/', [BlogController::class, 'index'])->name('home');
 
 // Login / Register pages
 Route::get('/login', fn() => view('login'))->name('login');
-Route::get('/register', fn() => view('register'))->name('register');
+
 
 // Auth actions
-Route::post('/register', [UserController::class, 'store']);
+
 Route::post('/login', [UserController::class, 'login']);
 
 // Public blog view
