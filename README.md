@@ -161,4 +161,10 @@ sudo systemctl reload apache2
 
 ---
 
+#### link storage files
+
+```shell
+php artisan storage:link
+```
+
 made with ❤️ in India
