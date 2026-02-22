@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\commentcontroller;
 
 /*
@@ -19,7 +20,7 @@ Route::get('/login', fn() => view('login'))->name('login');
 
 // Auth actions
 
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 
 // Public blog view
 Route::get('/blog/{blog}', [BlogController::class, 'show'])
