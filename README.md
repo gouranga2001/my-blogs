@@ -37,7 +37,7 @@ Certbot is a free, open-source software tool developed by the Electronic Frontie
     sudo apt install certbot python3-certbot-apache -y
     ```
 -   ```shell
-    sudo certbot --apache -d amarblog.in -d www.amarblog.in
+    sudo certbot --apache -d amarblog.in -d www.amarblog.in -d admin.amarblog.in
     ```
 -   ```shell
     sudo nano /etc/apache2/sites-available/my-blogs.conf
@@ -117,4 +117,40 @@ for openning ssl certificates config file
 sudo nano /etc/apache2/sites-available/my-blogs-le-ssl.conf 
 ```
 
+#### instructions on pushing updates in the server
 
+merge code in the main branch
+
+```shell
+git stash push -m "save env" .env
+git fetch origin
+git reset --hard origin/main
+git stash pop
+```
+
+and at the end run these commands
+
+```shell
+php artisan optimize:clear
+```
+The php artisan optimize:clear command is a convenient utility in Laravel that clears a variety of cached application files in a single operation, which is helpful during development and crucial during deployment
+
+What it does
+The optimize:clear command runs the following individual Artisan commands in sequence: 
+
+-   config:clear: Removes the cached configuration file, ensuring that changes in  your .env file or configuration files are reflected.
+-   cache:clear: Flushes the application's default cache driver (e.g., file, Redis, database).
+-   clear-compiled: Removes the compiled services and packages files that are used for performance optimization.
+-   event:clear: Clears the cached events and listeners.
+-   route:clear: Removes the cached route file, ensuring that any route changes are recognized by the application.
+-   view:clear: Deletes the compiled Blade views, forcing them to be recompiled on the next request.
+
+
+
+```shell
+php artisan config:cache
+```
+
+```shell
+sudo systemctl reload apache2
+```
