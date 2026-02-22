@@ -5,26 +5,17 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\commentcontroller;
 
-/*
-|--------------------------------------------------------------------------
-| PUBLIC ROUTES
-|--------------------------------------------------------------------------
-*/
-
-// Homepage → blog listing
-Route::get('/', [BlogController::class, 'index'])->name('home');
-
-// Login / Register pages
-Route::get('/login', fn() => view('login'))->name('login');
 
 
-// Auth actions
+Route::domain(env('ADMIN_DOMAIN'))->group(function (){
 
-Route::post('/login', [AuthController::class, 'login']);
+    // Login
+    Route::get('/', fn() => view('login'))->name('login');
 
-// Public blog view
-Route::get('/blog/{blog}', [BlogController::class, 'show'])
-    ->name('blog.show');
+    // Auth actions
+    Route::post('/login', [AuthController::class, 'login']);
+
+});
 
 
 /*
@@ -65,10 +56,23 @@ Route::middleware('auth')->group(function () {
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| PUBLIC ROUTES
+|--------------------------------------------------------------------------
+*/
+
+// Homepage → blog listing(index page)
+Route::get('/', [BlogController::class, 'index'])->name('home');
+
+// Public blog view
+Route::get('/blog/{blog}', [BlogController::class, 'show'])
+    ->name('blog.show');
+
 //blog comments
 Route::post('/blog/{blog}/comments', [CommentController::class, 'store'])
     ->name('comments.store');
 
-
+//user profile route
 Route::get('/users/{user}', [UserController::class, 'show'])
     ->name('user.show');
