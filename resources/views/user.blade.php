@@ -36,6 +36,22 @@
             border-left: 1px solid #e5e7eb;
         }
 
+        .thumb-box {
+            width: 100%;
+            height: 140px;
+            /* fixed size for all blogs */
+            /* background: #f1f5f9; */
+            /* placeholder color */
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* responsive — remove divider on mobile */
         @media (max-width: 992px) {
             .profile-section {
@@ -63,17 +79,29 @@
                 </h3>
 
                 @forelse($blogs as $blog)
-                    <div class="blog-item">
+                    <div class="row blog-item align-items-center">
 
-                        <h5 class="mb-1 fw-semibold">
-                            <a href="{{ route('blog.show', $blog) }}" class="text-decoration-none text-dark">
-                                {{ $blog->title }}
-                            </a>
-                        </h5>
+                        <!-- LEFT → TEXT -->
+                        <div class="col-8">
+                            <h5 class="mb-1 fw-semibold">
+                                <a href="{{ route('blog.show', $blog) }}" class="text-decoration-none text-dark">
+                                    {{ $blog->title }}
+                                </a>
+                            </h5>
 
-                        <small class="text-muted">
-                            {{ $blog->published_at->format('M d, Y') }}
-                        </small>
+                            <small class="text-muted">
+                                {{ $blog->published_at->format('M d, Y') }}
+                            </small>
+                        </div>
+
+                        <!-- RIGHT → THUMBNAIL (fixed space always) -->
+                        <div class="col-4">
+                            <div class="thumb-box">
+                                @if ($blog->thumbnail_image)
+                                    <img src="{{ asset('storage/' . $blog->thumbnail_image) }}">
+                                @endif
+                            </div>
+                        </div>
 
                     </div>
 
@@ -107,7 +135,7 @@
                         </h4>
 
                         <p class="text-muted mb-2">
-                            {{ '@'.$user->username }}
+                            {{ '@' . $user->username }}
                         </p>
                     </div>
 

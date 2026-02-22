@@ -80,7 +80,7 @@ class BlogController extends Controller
             'slug' => $slug,
             'markdown_content' => $markdown,
             'html_content' => $htmlContent,
-            'featured_image' => json_encode($featuredPaths), // ✅ fixed
+            'featured_image' => json_encode($featuredPaths), 
             'thumbnail_image' => $thumbnailPath,
             'published_at' => $request->has('publish') ? now() : null,
         ]);
