@@ -29,30 +29,6 @@ class UserController extends Controller
         return view('user', compact('user', 'blogs'));
     }
 
-
-    public function store(Request $request)
-        {
-            $request->validate([
-                'name' => 'required',
-                'username' => 'required|unique:users',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:6'
-            ]);
-
-            $user = User::create([
-                'name' => $request->name,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-
-            Auth::login($user);
-
-            return redirect()->route('admin.dashboard')
-                ->with('success', 'Account created!');
-        }
-
-
     public function update(Request $request,User $user){
 
         $request->validate([
@@ -91,23 +67,5 @@ class UserController extends Controller
         return back()->with('success','profile updated successfully');
     }
 
-    public function login(Request $request)
-        {
-            $credentials = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
-
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
-
-                return redirect()->route('admin.dashboard')
-                    ->with('success', 'Logged in successfully!');
-            }
-
-            return back()->withErrors([
-                'email' => 'Invalid credentials.'
-            ])->onlyInput('email');
-        }
 
 }

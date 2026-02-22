@@ -82,6 +82,21 @@
             font-size: clamp(1.6rem, 4vw, 2.2rem);
         }
 
+        .thumb-box {
+            width: 100%;
+            height: 140px;
+            /* background: #f1f5f9; */
+            /* empty space if no image */
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* ===== Mobile spacing ===== */
 
         @media (max-width: 576px) {
@@ -105,7 +120,7 @@
 
         <!-- Page Header -->
         <div class="mb-4 mb-md-5">
-            <h1 class="page-title text-primary">All Blogs</h1>
+            <h1 class="page-title text-primary">Amar Blog</h1>
             <p class="text-muted mb-0">Latest published posts</p>
         </div>
 
@@ -113,37 +128,47 @@
         <div>
 
             @forelse($blogs as $blog)
-                <div class="blog-item">
+                <div class="row blog-item align-items-center">
 
-                    <!-- Title -->
-                    <a href="{{ route('blog.show', $blog) }}" class="blog-title mb-2">
-                        {{ $blog->title }}
-                    </a>
+                    <!-- LEFT → CONTENT -->
+                    <div class="col-8">
 
-                    <!-- Meta -->
-                    <div class="blog-meta mb-3">
-                        By <a href="{{ route('user.show', $blog->user) }}"
-                            class="text-decoration-none text-primary fw-medium">
-                            {{ $blog->user->username }}
+                        <!-- Title -->
+                        <a href="{{ route('blog.show', $blog) }}" class="blog-title mb-2 d-block">
+                            {{ $blog->title }}
                         </a>
 
-                        • {{ $blog->published_at->format('M d, Y') }}
+                        <!-- Meta -->
+                        <div class="blog-meta mb-2">
+                            By <a href="{{ route('user.show', $blog->user) }}"
+                                class="text-decoration-none text-primary fw-medium">
+                                {{ $blog->user->username }}
+                            </a>
+                            • {{ $blog->published_at->format('M d, Y') }}
+                        </div>
+
+                        <!-- Preview -->
+                        <p class="text-muted mb-2">
+                            {{ Str::limit(strip_tags($blog->html_content), 160) }}
+                        </p>
+
+                        <a href="{{ route('blog.show', $blog) }}" class="btn btn-sm btn-primary read-btn">
+                            Read More
+                        </a>
+
                     </div>
 
-                    <!-- Preview -->
-                    <p class="text-muted mb-3">
-                        {{ Str::limit(strip_tags($blog->html_content), 160) }}
-                    </p>
-
-                    <!-- Read More -->
-                    <a href="{{ route('blog.show', $blog) }}" class="btn btn-sm btn-primary read-btn">
-                        Read More
-                    </a>
+                    <!-- RIGHT → THUMBNAIL (same style as profile page) -->
+                    <div class="col-4">
+                        <div class="thumb-box">
+                            @if ($blog->thumbnail_image)
+                                <img src="{{ asset('storage/' . $blog->thumbnail_image) }}">
+                            @endif
+                        </div>
+                    </div>
 
                 </div>
-
             @empty
-
                 <div class="text-center text-muted py-5">
                     No blogs published yet.
                 </div>
