@@ -93,12 +93,6 @@
                         Login
                     </button>
 
-                    <div class="text-center mt-4">
-                        <small>
-                            Don't have an account?
-                            <a href="/register" class="text-primary fw-semibold">Register</a>
-                        </small>
-                    </div>
 
                 </form>
 
