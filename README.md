@@ -75,3 +75,46 @@ Certbot is a free, open-source software tool developed by the Electronic Frontie
     sudo systemctl reload apache2
     ```
 
+#### run this command for production env
+
+```shell
+composer install --no-dev --optimize-autoloader
+```
+this commands basically removes packages that are needed only in dev env
+
+if there is a use of any node modules then we have to run
+
+```shell
+npm run build
+```
+
+but in our case we have used mostly cdns, therefore I have removed them
+
+```shell
+rm -rf package.json package-lock.json vite.config.js
+rm -rf resources/js
+rm -rf tests
+rm -rf phpunit.xml
+```
+
+#### sub-domain config
+
+open "config/app.php" and add
+
+```shell
+'admin_domain' => env('ADMIN_DOMAIN'),
+```
+
+in .env we need to add this
+
+```
+ADMIN_DOMAIN=admin.amarblog.in
+```
+
+for openning ssl certificates config file
+
+```shell
+sudo nano /etc/apache2/sites-available/my-blogs-le-ssl.conf 
+```
+
+
