@@ -154,3 +154,6 @@ php artisan config:cache
 ```shell
 sudo systemctl reload apache2
 ```
+---
+
+made with ❤️ in India
