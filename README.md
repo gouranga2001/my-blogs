@@ -102,7 +102,7 @@ rm -rf phpunit.xml
 open "config/app.php" and add
 
 ```shell
-'admin_domain' => env('ADMIN_DOMAIN'),
+'admin_domain' => env('ADMIN_DOMAIN')
 ```
 
 in .env we need to add this
@@ -154,6 +154,11 @@ php artisan config:cache
 ```shell
 sudo systemctl reload apache2
 ```
+
+#### profile pic must be with in the size of 2MB
+#### Thumbnail pic must be with in the size of 2MB
+#### Featured images/images used in blogs each images must be the size of 4MB
+
 ---
 
 made with ❤️ in India
