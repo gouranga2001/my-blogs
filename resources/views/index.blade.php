@@ -4,7 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blogs</title>
+    <title>Amar Blog</title>
+    <meta name="description" content="Read high-quality blogs on Laravel, backend development, system design, and real-world deployment experiences.">
+
+    <link rel="canonical" href="{{ url('/') }}">
+    <meta name="robots" content="index, follow">
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Amar Blog">
+    <meta property="og:description" content="Programming blogs on Laravel, backend, and system design">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:site_name" content="Amar Blog">
+
+    {{-- Twitter --}}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Amar Blog">
+    <meta name="twitter:description" content="Programming blogs and tutorials">
+
+    @php
+    $homeJsonLd = [
+        "@context" => "https://schema.org",
+        "@type" => "Blog",
+        "name" => "Amar Blog",
+        "url" => url('/'),
+        "description" => "Programming blogs on Laravel, backend development, and system design.",
+        "publisher" => [
+            "@type" => "Organization",
+            "name" => "Amar Blog",
+            "logo" => [
+                "@type" => "ImageObject",
+                "url" => asset('logo.png'), // add real logo
+            ],
+        ],
+    ];
+    @endphp
+
+    <script type="application/ld+json">
+    {!! json_encode($homeJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
