@@ -35,7 +35,29 @@
     @endif
 
     {{-- ── JSON-LD Structured Data ── --}}
-   
+   @php
+$userJsonLd = [
+    "@context" => "https://schema.org",
+    "@type" => "Person",
+    "name" => $user->name,
+    "alternateName" => $user->username,
+    "url" => route('user.show', $user),
+    "description" => $user->bio 
+        ? Str::limit($user->bio, 155) 
+        : $user->name . ' is a writer on Amar Blog.',
+    "image" => $user->avatar_path 
+        ? asset('storage/' . $user->avatar_path) 
+        : asset('default-avatar.png'), // fallback
+    "mainEntityOfPage" => [
+        "@type" => "WebPage",
+        "@id" => route('user.show', $user),
+    ],
+];
+@endphp
+
+<script type="application/ld+json">
+{!! json_encode($userJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">

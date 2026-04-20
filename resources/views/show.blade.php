@@ -38,7 +38,43 @@
 
     {{-- ── JSON-LD Structured Data ── --}}
     
+@php
+$jsonLd = [
+    "@context" => "https://schema.org",
+    "@type" => "BlogPosting",
+    "headline" => $blog->title,
+    "description" => Str::limit(strip_tags($blog->html_content), 155),
+    "image" => $blog->thumbnail_image ? asset('storage/' . $blog->thumbnail_image) : null,
+    "author" => [
+        "@type" => "Person",
+        "name" => $blog->user->name,
+        "url" => route('user.show', $blog->user),
+    ],
+    "publisher" => [
+        "@type" => "Organization",
+        "name" => "Amar Blog",
+        "logo" => [
+            "@type" => "ImageObject",
+            "url" => asset('logo.png'), // ⚠️ add a real logo
+        ],
+    ],
+    "datePublished" => optional($blog->published_at)->toIso8601String(),
+    "dateModified" => optional($blog->updated_at)->toIso8601String(),
+    "mainEntityOfPage" => [
+        "@type" => "WebPage",
+        "@id" => route('blog.show', $blog),
+    ],
+    "wordCount" => str_word_count(strip_tags($blog->html_content)),
+];
+@endphp
 
+<script type="application/ld+json">
+{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+
+<script type="application/ld+json">
+{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
